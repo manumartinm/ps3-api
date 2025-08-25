@@ -5,26 +5,20 @@ from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from config import dotenv_path
-from backend.routes import router
-from backend.logger.logger import CustomizeLogger
-from backend.constants import PS3_BACKEND_CORS_ORIGIN
+from ps3_api.routes import router
+from ps3_api.constants import PS3_BACKEND_CORS_ORIGIN
 from dotenv import load_dotenv
-from importlib.metadata import version
 from pathlib import Path
 
 load_dotenv(dotenv_path)
 
-config_path = Path(__file__).with_name("logging_config.json")
-HOST, PORT = "127.0.0.1", 8084
+HOST, PORT = "127.0.0.1", 8081
 
 def create_app() -> FastAPI:
-    app = FastAPI(version=version("backend"), title="backend")
-    logger = CustomizeLogger.make_logger(config_path)
-    app.logger = logger # type: ignore
-
+    app = FastAPI(version="1.0.0", title="PS3 API")
     return app
 
-logger = logging.getLogger('app')
+logger = logging.getLogger('ps3_api')
 
 app = create_app()
 
@@ -52,3 +46,6 @@ async def root():
 
 def run():
     uvicorn.run(app, host=HOST, port=PORT, access_log=False)
+
+if __name__ == "__main__":
+    run()
